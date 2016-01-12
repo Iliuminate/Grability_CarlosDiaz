@@ -34,7 +34,9 @@ import com.grability.iliuminate.grabilityprueba.ControlClasses.Urls;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.FeedClass;
 import com.grability.iliuminate.grabilityprueba.MyRecyclerView.MyRecyclerViewAdapter;
+import com.grability.iliuminate.grabilityprueba.OfflineManager.JsonOffline;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class MainNavigation extends AppCompatActivity
 
 
     FeedClass feedClass;
-    Button btn1, botonN;
+    Button btn1;
     private final String TAG="MyRecycler";
     List<String> listaCategorias;
     Context context=this;
@@ -71,8 +73,6 @@ public class MainNavigation extends AppCompatActivity
 
 
         btn1=(Button)findViewById(R.id.btn1);
-        botonN=(Button)findViewById(R.id.buttonN);
-
         recyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
         listaCategorias=new ArrayList<String>();
 
@@ -89,19 +89,6 @@ public class MainNavigation extends AppCompatActivity
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(context, MyRecyclerTablet.class));
-            }
-        });
-
-        botonN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*//invalidateOptionsMenu();
-                ArrayList<EntryClass> aux=new ArrayList<EntryClass>();
-                aux=feedClass.getEntryList();
-                Log.d("BUTTON2", "Tamaño: " + aux.size());
-                recyclerViewAdapter.reloadData(resultQuery("Games", aux));
-                toastMessage("Se esta tratando de manejar el GAMES");*/
                 startActivity(new Intent(context,MainNavigationTablet.class));
             }
         });
@@ -163,7 +150,6 @@ public class MainNavigation extends AppCompatActivity
         int width = size.x;
         int height = size.y;
 
-
         // dpi
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -173,10 +159,8 @@ public class MainNavigation extends AppCompatActivity
         float xdpi = metrics.xdpi;
         float ydpi = metrics.ydpi;
 
-
         // Orientación (1 portrait, 2 Landscape)
         int orientation = getResources().getConfiguration().orientation;
-
 
         displayParameters.add(widthPixels);//Width
         displayParameters.add(heightPixels);//Height
@@ -185,6 +169,7 @@ public class MainNavigation extends AppCompatActivity
 
         return displayParameters;
     }
+
 
 
     /**
@@ -206,24 +191,35 @@ public class MainNavigation extends AppCompatActivity
             public void onResponse(JSONObject response) {
 
                 // Capturamos la respuesta y la dejamos a disposición
-                feedClass = ParseJson.parseJsonFeedClass(response);
-                ArrayList<EntryClass> entryList= new ArrayList<EntryClass>();
-                entryList.addAll(feedClass.getEntryList());
+                if(response.isNull("feed")) {
+                    JsonOffline jsonOffline=new JsonOffline(context);
+                    String aux=jsonOffline.readLocalFile();
+                    try {
+                        feedClass = ParseJson.parseJsonFeedClass(new JSONObject(aux));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    feedClass = ParseJson.parseJsonFeedClass(response);
+                    prepararModoOffline(context, response.toString());
+                    ArrayList<EntryClass> entryList = new ArrayList<EntryClass>();
+                    entryList.addAll(feedClass.getEntryList());
 
-                //Creamos el Adapter y cargamos en pantalla
-                recyclerViewAdapter = new MyRecyclerViewAdapter(context, entryList, 0,getDisplayParameters());
-                recyclerView.setAdapter(recyclerViewAdapter);
+                    //Creamos el Adapter y cargamos en pantalla
+                    recyclerViewAdapter = new MyRecyclerViewAdapter(context, entryList, 0, getDisplayParameters());
+                    recyclerView.setAdapter(recyclerViewAdapter);
 
-                //Cargamos la lista de categorias
-                listaCategorias = getListCategory(feedClass.getEntryList());
-                agregarItemsNavigationViewMenu(listaCategorias,navigationView);
-                invalidateOptionsMenu();
+                    //Cargamos la lista de categorias
+                    listaCategorias = getListCategory(feedClass.getEntryList());
+                    agregarItemsNavigationViewMenu(listaCategorias, navigationView);
+                    invalidateOptionsMenu();
+                }
             }
         }, new Response.ErrorListener(){
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                toastMessage("Error Volley => )"+error.toString());
+                toastMessage("Favor verifique su conexión a Internet");
                 Log.e(TAG, "Error Respuesta en JSON: " + error.getMessage());
             }
         });
@@ -233,6 +229,7 @@ public class MainNavigation extends AppCompatActivity
 
         return feedClass;
     }
+
 
     /**
      * Para optener categorias de las EntrClass
@@ -291,6 +288,13 @@ public class MainNavigation extends AppCompatActivity
         return entryClasses;
     }
 
+    private void prepararModoOffline(Context context, String textoJson)
+    {
+        final JsonOffline jsonOffline=new JsonOffline(context);
+        if(jsonOffline.writeLocalFile(textoJson))
+        {Log.d(TAG,"JSON almacenado: "+textoJson);}
+        else{Log.d(TAG,"No se pudo escribir el fichero");}
+    }
 
     private void toastMessage(String msn){
         Toast.makeText(this, msn, Toast.LENGTH_SHORT).show();

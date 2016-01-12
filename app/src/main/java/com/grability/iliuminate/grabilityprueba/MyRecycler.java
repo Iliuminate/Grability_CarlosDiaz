@@ -211,6 +211,7 @@ public class MyRecycler extends AppCompatActivity {
                 // Capturamos la respuesta y la dejamos a disposición
                 feedClass=ParseJson.parseJsonFeedClass(response);
 
+
                 //Creamos el Adapter y cargamos en pantalla
                 recyclerViewAdapter = new MyRecyclerViewAdapter(context, feedClass.getEntryList(), 0,getDisplayParameters());
                 recyclerView.setAdapter(recyclerViewAdapter);

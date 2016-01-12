@@ -22,6 +22,7 @@ import com.grability.iliuminate.grabilityprueba.OfflineManager.GetInternalImage;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.SaveImage;
 import com.grability.iliuminate.grabilityprueba.R;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -235,6 +236,16 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(lado, lado);
         layoutParams.setMargins(marginImage,marginImage,marginImage,marginImage);
         imageView.setLayoutParams(layoutParams);
+    }
+
+
+    public void reloadData(ArrayList<EntryClass> datas){
+        Log.d(TAG,"Reload Data0 Size: "+datas.size());
+        data.clear();
+        data.addAll(datas);
+        notifyDataSetChanged();
+        Log.d(TAG, "Reload Data1 Size: " + data.size());
+        Log.d(TAG, "Reload Data2 Size: " + datas.size());
     }
 
 
