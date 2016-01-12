@@ -88,7 +88,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
-        View itemView = inflater.inflate(R.layout.item, viewGroup, false);
+        //View itemView = inflater.inflate(R.layout.item, viewGroup, false);
+        View itemView = inflater.inflate(R.layout.item_card, viewGroup, false);
         //Instanciamos la clase Holder(para esta caso myViewHolder) y la retornamos
         MyViewHolder holder = new MyViewHolder(itemView);
         return holder;

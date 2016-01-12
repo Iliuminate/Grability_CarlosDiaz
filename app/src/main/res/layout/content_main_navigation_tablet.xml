@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.grability.iliuminate.grabilityprueba.MyRecyclerTablet"
-    tools:showIn="@layout/activity_my_recycler_tablet"
-    android:background="#bdbdbd">
-
-    <!--android.support.v7.widget.CardView-->
+    tools:context="com.grability.iliuminate.grabilityprueba.MainNavigationTablet"
+    tools:showIn="@layout/app_bar_main_navigation_tablet"
+    android:background="#f6e7da">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Número de Columnas:"
+            android:text="Columnas:"
             android:layout_alignParentLeft="true"
             android:id="@+id/labelSeek" />
 
@@ -38,24 +38,18 @@
             android:max="4"
             android:layout_marginRight="16dp"
             android:layout_toRightOf="@+id/labelSeek"
-             />
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinnerCategory"
-            android:layout_toRightOf="@+id/seekBar"
             />
+
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
-        android:paddingLeft="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_vertical_margin"
         android:layout_below="@+id/layoutTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scrollbars="vertical" />
 
+    <!--android:paddingLeft="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_vertical_margin"-->
 
 </RelativeLayout>

@@ -1,21 +1,29 @@
 package com.grability.iliuminate.grabilityprueba;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Splash extends AppCompatActivity {
+
+    private static final String TAG = "SPLASH";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,7 @@ public class Splash extends AppCompatActivity {
         });
 
 
+        getDisplayParameters();
 
 
 
@@ -86,7 +95,7 @@ public class Splash extends AppCompatActivity {
 
     private void Lanzar_Inicio()
     {
-        Intent i=new Intent(this, MyRecycler.class);
+        Intent i=new Intent(this, MainNavigation.class);
         startActivity(i);
     }
 
@@ -95,4 +104,56 @@ public class Splash extends AppCompatActivity {
         super.onStop();
         finish();
     }
+
+
+    /**
+     * List<Integer> [0-3]: Width, Height, Density, Orientation
+     * @return
+     */
+    public List<Integer> getDisplayParameters()
+    {
+        Display display = getWindowManager().getDefaultDisplay();
+        List<Integer> displayParameters=new ArrayList<Integer>();
+
+        // Tamaño en píxeles
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        Log.i(TAG, "Ancho             = " + width);
+        Log.i(TAG, "Alto              = " + height);
+
+        // dpi
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int heightPixels = metrics.heightPixels;
+        int widthPixels = metrics.widthPixels;
+        int densityDpi = metrics.densityDpi;
+        float xdpi = metrics.xdpi;
+        float ydpi = metrics.ydpi;
+        Log.i(TAG, "Ancho en píxeles  = " + widthPixels);
+        Log.i(TAG, "Alto en píxeles   = " + heightPixels);
+        Log.i(TAG, "Densidad dpi      = " + densityDpi);
+        Log.i(TAG, "x dpi             = " + xdpi);
+        Log.i(TAG, "y dpi             = " + ydpi);
+
+        Log.i(TAG, "Rel. Ancho        = " + (widthPixels/xdpi));
+        Log.i(TAG, "Rel. Alto         = " + (heightPixels/ydpi));
+
+        // Orientación (1 portrait, 2 Landscape)
+        int orientation = getResources().getConfiguration().orientation;
+        Log.i(TAG, "Orientación       = " + orientation);
+
+        displayParameters.add(widthPixels);//Width
+        displayParameters.add(heightPixels);//Height
+        displayParameters.add(densityDpi);//Density
+        displayParameters.add(orientation);
+
+
+        Log.i(TAG, "Esto es una = " + "...");
+
+
+        return displayParameters;
+    }
+
 }

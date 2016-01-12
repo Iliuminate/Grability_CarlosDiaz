@@ -1,24 +1,27 @@
 package com.grability.iliuminate.grabilityprueba;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -31,9 +34,7 @@ import com.android.volley.toolbox.Volley;
 import com.grability.iliuminate.grabilityprueba.ControlClasses.ParseJson;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.FeedClass;
-import com.grability.iliuminate.grabilityprueba.MyRecyclerView.DividerItemDecoration;
 import com.grability.iliuminate.grabilityprueba.MyRecyclerView.MarginDecoration;
-import com.grability.iliuminate.grabilityprueba.MyRecyclerView.MyRecyclerViewAdapter;
 import com.grability.iliuminate.grabilityprueba.MyRecyclerView.MyRecyclerViewAdapterTablet;
 import com.grability.iliuminate.grabilityprueba.MyRecyclerView.ViewHolderClass;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.JsonOffline;
@@ -43,10 +44,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Iliuminate on 11/01/2016.
- */
-public class MyRecyclerTablet extends AppCompatActivity {
+public class MainNavigationTablet extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 
     //Definicion de los Otros elementos principales
@@ -67,9 +66,32 @@ public class MyRecyclerTablet extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_recycler_tablet);
+        setContentView(R.layout.activity_main_navigation_tablet);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
+
+        loadItems();
+        numeroBloques=determinarBloques();
+
+
+        final JsonOffline jsonOffline=new JsonOffline(contexto);
+        if(jsonOffline.writeLocalFile(jsonTexto))
+        {
+            Log.d(TAG, "JSON2: " + jsonTexto);}
+        else{Log.d(TAG,"No se pudo escribir el fichero");}
+
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        recyclerView.addItemDecoration(new MarginDecoration(this));
+        recyclerView.setHasFixedSize(true);
+
+        recyclerView.setLayoutManager(new GridLayoutManager(contexto, numeroBloques));
+
+
+
+        //********************************************************************************************
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -80,40 +102,18 @@ public class MyRecyclerTablet extends AppCompatActivity {
             }
         });
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-        spinnerCategory=(Spinner)findViewById(R.id.spinnerCategory);
-
-
-        loadItems();
-        numeroBloques=determinarBloques();
-
-
-        final JsonOffline jsonOffline=new JsonOffline(contexto);
-        if(jsonOffline.writeLocalFile(jsonTexto))
-        {Log.d(TAG,"JSON2: "+jsonTexto);}
-        else{Log.d(TAG,"No se pudo escribir el fichero");}
-
-        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        recyclerView.addItemDecoration(new MarginDecoration(this));
-        recyclerView.setHasFixedSize(true);
-
-
-        recyclerView.setLayoutManager(new GridLayoutManager(contexto, numeroBloques));
-
-
-        /*//Código para cambiar el ancho de los elementos*/
-        /*GridLayoutManager manager = new GridLayoutManager(contexto, 3);
-        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return (2 - position % 2);
-            }
-        });
-        recyclerView.setLayoutManager(manager);*/
-
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
+    //***************************************************************************************************************
     private static class GridAdapter extends RecyclerView.Adapter<ViewHolderClass> {
 
         private final ArrayList<EntryClass> entryClasses;
@@ -220,8 +220,6 @@ public class MyRecyclerTablet extends AppCompatActivity {
                 recyclerViewAdapter = new MyRecyclerViewAdapterTablet(contexto, feedClass.getEntryList(), 0,getDisplayParameters(),numeroBloques);
                 recyclerView.setAdapter(recyclerViewAdapter);
 
-                feedSpinnerCtegory(feedClass.getEntryList(), spinnerCategory);
-
             }
         }, new Response.ErrorListener(){
 
@@ -240,34 +238,9 @@ public class MyRecyclerTablet extends AppCompatActivity {
 
 
     private int determinarBloques(){
-        int j=1;
+        int j=3;
 
         return j;
-    }
-
-    /**
-     * Alimentamos el spinner con las categorias
-     * @param entryClasses
-     */
-    private void feedSpinnerCtegory(ArrayList<EntryClass> entryClasses, Spinner spinner){
-
-        List<String> listaSpinnerCategory = new ArrayList<String>();
-
-        for (EntryClass itemEntryClass:entryClasses){
-            listaSpinnerCategory.add(itemEntryClass.getCategory().getTerm().toString());
-        }
-
-        ArrayAdapter<String> adapter;
-        //Asignas el origen de datos desde los recursos
-        adapter = new ArrayAdapter<String>(contexto, android.R.layout.simple_spinner_dropdown_item,listaSpinnerCategory);
-
-        //Asignas el layout a inflar para cada elemento
-        //al momento de desplegar la lista
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        //Seteas el adaptador
-        spinner.setAdapter(adapter);
-
     }
 
 
@@ -275,4 +248,69 @@ public class MyRecyclerTablet extends AppCompatActivity {
     {
         Toast.makeText(context, msn, Toast.LENGTH_SHORT).show();
     }
+
+
+    //***************************************************************************************************************
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_navigation_tablet, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
+
+
 }

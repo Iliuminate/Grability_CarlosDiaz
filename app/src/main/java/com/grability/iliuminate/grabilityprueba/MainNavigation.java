@@ -96,12 +96,13 @@ public class MainNavigation extends AppCompatActivity
         botonN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //invalidateOptionsMenu();
+                /*//invalidateOptionsMenu();
                 ArrayList<EntryClass> aux=new ArrayList<EntryClass>();
                 aux=feedClass.getEntryList();
                 Log.d("BUTTON2", "Tamaño: " + aux.size());
                 recyclerViewAdapter.reloadData(resultQuery("Games", aux));
-                toastMessage("Se esta tratando de manejar el GAMES");
+                toastMessage("Se esta tratando de manejar el GAMES");*/
+                startActivity(new Intent(context,MainNavigationTablet.class));
             }
         });
 
@@ -264,7 +265,8 @@ public class MainNavigation extends AppCompatActivity
         for(int j=0;j<listaNames.size();j++)
         {
             //menues.add(elementoMenus.get(j).getGroupId(), elementoMenus.get(j).getItemId(), elementoMenus.get(j).getOrder(), elementoMenus.get(j).getTitle());
-            menues.add(listaNames.get(j));
+            menues.add(listaNames.get(j)).setIcon(R.drawable.abc_btn_radio_to_on_mtrl_015);
+
         }
     }
 

@@ -89,7 +89,7 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
         if(numBloques>2) {
             itemView = inflater.inflate(R.layout.item_tablet, viewGroup, false);
         }else {
-            itemView = inflater.inflate(R.layout.item, viewGroup, false);
+            itemView = inflater.inflate(R.layout.item_card, viewGroup, false);
         }
         //Instanciamos la clase Holder(para esta caso myViewHolder) y la retornamos
         MyViewHolder holder = new MyViewHolder(itemView);
