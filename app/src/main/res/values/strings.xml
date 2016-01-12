@@ -1,11 +1,21 @@
 <resources>
-    <string name="app_name">GrabilityPrueba</string>
+    <string name="app_name">Grability Prueba</string>
+    <string name="developer">CARLOS ENRIQUE DIAZ ARANDIA</string>
     <string name="action_settings">Settings</string>
+
+    <string name="all_aplication">All Applications</string>
+
+
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_my_recycler_tablet">MyRecyclerTablet</string>
+    <string name="title_activity_my_recycler_tablet">Grability Tablet</string>
     <string name="SplashText">Para multiples Opciones</string>
+
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_main_navigation">MainNavigation</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

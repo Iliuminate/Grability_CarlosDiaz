@@ -43,7 +43,7 @@ public class MyRecycler extends AppCompatActivity {
     //Definicion de los Otros elementos principales
     JsonOffline jsonOffline;
     FeedClass feedClass;
-    Button btn1;
+    Button btn1, botonN;
     Spinner spinnerCategory;
     private final String TAG="MyRecycler";
     String aux;
@@ -64,6 +64,7 @@ public class MyRecycler extends AppCompatActivity {
 
 
         btn1=(Button)findViewById(R.id.btn1);
+        botonN=(Button)findViewById(R.id.buttonN);
         spinnerCategory=(Spinner)findViewById(R.id.spinnerCategory);
         recyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
 
@@ -108,6 +109,13 @@ public class MyRecycler extends AppCompatActivity {
                 recyclerView.setAdapter(recyclerViewAdapter);
             }
         });*/
+
+        botonN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(context, MainNavigation.class));
+            }
+        });
 
     }
 

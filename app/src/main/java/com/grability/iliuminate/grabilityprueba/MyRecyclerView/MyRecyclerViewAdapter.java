@@ -26,6 +26,7 @@ import com.grability.iliuminate.grabilityprueba.OfflineManager.SaveImage;
 import com.grability.iliuminate.grabilityprueba.R;
 
 import java.security.Policy;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -122,7 +123,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         // Actualizar los Views
         myViewHolder.titulo.setText(currentData.getTitle());
-        myViewHolder.precio.setText("$ "+currentData.getIm_price().getAmount()+" "+currentData.getIm_price().getCurrency());
+        myViewHolder.precio.setText("$ " + currentData.getIm_price().getAmount() + " " + currentData.getIm_price().getCurrency());
     }
 
 
@@ -170,7 +171,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                                     //Contexto
                                     context
                             );
-                            Log.d(TAG,"PostGuardar: "+item.getId().getIm_id() + separador[tamanoImage] + heightImage);
+                            //Log.d(TAG,"PostGuardar: "+item.getId().getIm_id() + separador[tamanoImage] + heightImage);
                         }
 
                     }
@@ -196,7 +197,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         parametrizarImageView(heightImage,imageView);
 
         /*//Menaje en el Lod como apoyo para verificar la carga Local*/
-        Log.d(TAG,"CargarImagenLocal: "+item.getId().getIm_id()+separador[tamanoImage]+heightImage);
+        //Log.d(TAG, "CargarImagenLocal: " + item.getId().getIm_id() + separador[tamanoImage] + heightImage);
 
         //Se busca y se carga la Imagen en el ImageView
         getInternalImage=new GetInternalImage(item.getId().getIm_id()+separador[tamanoImage]+heightImage,imageView, context);
@@ -230,9 +231,32 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         int marginImage=(int)heightImage/6;
         int lado=(int)(heightImage*1.8);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(lado,lado);
-        layoutParams.setMargins(marginImage,marginImage,marginImage,marginImage);
+        layoutParams.setMargins(marginImage, marginImage, marginImage, marginImage);
         imageView.setLayoutParams(layoutParams);
     }
+
+
+    public void reloadData(ArrayList<EntryClass> datas){
+        Log.d(TAG,"Reload Data0 Size: "+datas.size());
+        data.clear();
+        data.addAll(datas);
+        notifyDataSetChanged();
+        Log.d(TAG, "Reload Data1 Size: " + data.size());
+        Log.d(TAG,"Reload Data2 Size: "+datas.size());
+    }
+
+/*
+    public void add(MyViewHolder item, int position) {
+        items.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public void remove(MyViewHolder item) {
+        int position = items.indexOf(item);
+        items.remove(position);
+        notifyItemRemoved(position);
+    }
+*/
 
 
 }
