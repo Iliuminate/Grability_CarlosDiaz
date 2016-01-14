@@ -1,6 +1,7 @@
 package com.grability.iliuminate.grabilityprueba;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -54,12 +55,18 @@ public class MainNavigation extends AppCompatActivity
     List<String> listaCategorias;
     Context context=this;
     NavigationView navigationView;
+    ArrayList<EntryClass> entries;
 
     //Definicion de elementos para el Recycler View
     private RecyclerView.LayoutManager layoutManager;
-    public static View.OnClickListener myOnClickListener;
     private static RecyclerView recyclerView;
     private static MyRecyclerViewAdapter recyclerViewAdapter;
+
+
+    //Se definen los eventos Click
+    public static View.OnClickListener myOnClickListener;
+    public static View.OnClickListener myOnClickImagenListener;
+    public static View.OnClickListener myOnClickTextViewListener;
 
 
 
@@ -76,7 +83,12 @@ public class MainNavigation extends AppCompatActivity
         recyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
         listaCategorias=new ArrayList<String>();
 
+        //Se inicializan los eventos OnClickListener para los View
         myOnClickListener = new MyOnClickListener();
+        myOnClickImagenListener=new MyOnClickImageListener();
+        myOnClickTextViewListener=new MyOnClickTextViewListener();
+
+
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
 
@@ -196,23 +208,13 @@ public class MainNavigation extends AppCompatActivity
                     String aux=jsonOffline.readLocalFile();
                     try {
                         feedClass = ParseJson.parseJsonFeedClass(new JSONObject(aux));
+                        alimentarVistas(feedClass,new JSONObject(aux));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }else {
                     feedClass = ParseJson.parseJsonFeedClass(response);
-                    prepararModoOffline(context, response.toString());
-                    ArrayList<EntryClass> entryList = new ArrayList<EntryClass>();
-                    entryList.addAll(feedClass.getEntryList());
-
-                    //Creamos el Adapter y cargamos en pantalla
-                    recyclerViewAdapter = new MyRecyclerViewAdapter(context, entryList, 0, getDisplayParameters());
-                    recyclerView.setAdapter(recyclerViewAdapter);
-
-                    //Cargamos la lista de categorias
-                    listaCategorias = getListCategory(feedClass.getEntryList());
-                    agregarItemsNavigationViewMenu(listaCategorias, navigationView);
-                    invalidateOptionsMenu();
+                    alimentarVistas(feedClass, response);
                 }
             }
         }, new Response.ErrorListener(){
@@ -229,6 +231,27 @@ public class MainNavigation extends AppCompatActivity
 
         return feedClass;
     }
+
+
+
+    private void alimentarVistas(FeedClass feedClass, JSONObject response){
+        entries=new ArrayList<EntryClass>();
+        entries.addAll(feedClass.getEntryList());
+        prepararModoOffline(context, response.toString());
+        ArrayList<EntryClass> entryList = new ArrayList<EntryClass>();
+        entryList.addAll(feedClass.getEntryList());
+
+        //Creamos el Adapter y cargamos en pantalla
+        recyclerViewAdapter = new MyRecyclerViewAdapter(context, entryList, 0, getDisplayParameters());
+        recyclerView.setAdapter(recyclerViewAdapter);
+
+        //Cargamos la lista de categorias
+        listaCategorias = getListCategory(feedClass.getEntryList());
+        agregarItemsNavigationViewMenu(listaCategorias, navigationView);
+        invalidateOptionsMenu();
+    }
+
+
 
 
     /**
@@ -348,7 +371,7 @@ public class MainNavigation extends AppCompatActivity
         // Handle navigation view item clicks here.
 
         String label=(String)item.getTitle();
-        ArrayList<EntryClass> entries= new ArrayList<EntryClass>();
+        entries= new ArrayList<EntryClass>();
         entries.addAll(feedClass.getEntryList());
         toastMessage(label);
 
@@ -363,10 +386,26 @@ public class MainNavigation extends AppCompatActivity
         }
 
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+
+    private class MyOnClickImageListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            toastMessage("IMAGEN");
+        }
+    }
+
+
+    private class MyOnClickTextViewListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            toastMessage("TEXTO");
+        }
     }
 
 

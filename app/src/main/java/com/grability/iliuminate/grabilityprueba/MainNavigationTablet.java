@@ -269,8 +269,8 @@ public class MainNavigationTablet extends AppCompatActivity
         display.getSize(size);
         int width = size.x;
         int height = size.y;
-        Log.i(TAG, "Ancho             = " + width);
-        Log.i(TAG, "Alto              = " + height);
+        /*Log.i(TAG, "Ancho             = " + width);
+        Log.i(TAG, "Alto              = " + height);*/
 
         // dpi
         DisplayMetrics metrics = new DisplayMetrics();
@@ -280,18 +280,18 @@ public class MainNavigationTablet extends AppCompatActivity
         int densityDpi = metrics.densityDpi;
         float xdpi = metrics.xdpi;
         float ydpi = metrics.ydpi;
-        Log.i(TAG, "Ancho en píxeles  = " + widthPixels);
+        /*Log.i(TAG, "Ancho en píxeles  = " + widthPixels);
         Log.i(TAG, "Alto en píxeles   = " + heightPixels);
         Log.i(TAG, "Densidad dpi      = " + densityDpi);
         Log.i(TAG, "x dpi             = " + xdpi);
-        Log.i(TAG, "y dpi             = " + ydpi);
+        Log.i(TAG, "y dpi             = " + ydpi);*/
 
-        Log.i(TAG, "Rel. Ancho        = " + (widthPixels/xdpi));
-        Log.i(TAG, "Rel. Alto         = " + (heightPixels/ydpi));
+       /* Log.i(TAG, "Rel. Ancho        = " + (widthPixels/xdpi));
+        Log.i(TAG, "Rel. Alto         = " + (heightPixels/ydpi));*/
 
         // Orientación (1 portrait, 2 Landscape)
         int orientation = getResources().getConfiguration().orientation;
-        Log.i(TAG, "Orientación       = " + orientation);
+        /*Log.i(TAG, "Orientación       = " + orientation);*/
 
         displayParameters.add(widthPixels);//Width
         displayParameters.add(heightPixels);//Height

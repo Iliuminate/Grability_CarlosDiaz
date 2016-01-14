@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.grability.iliuminate.grabilityprueba.ControlClasses.ParameterImageView;
+import com.grability.iliuminate.grabilityprueba.MainNavigation;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.GetInternalImage;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.SaveImage;
@@ -81,6 +82,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
             //Se puede agregar un evento OnClickListener
             //itemView.setOnClickListener(context.myOnClickListener);
+            imageView.setOnClickListener(MainNavigation.myOnClickImagenListener);
+            titulo.setOnClickListener(MainNavigation.myOnClickTextViewListener);
         }
     }
 
@@ -157,7 +160,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                     public void onResponse(Bitmap bitmap) {
 
                         //Cargamos la Imagen en el ImageView
-                        parametrizarImageView(heightImage,imageView);
+                        parametrizarImageView(heightImage, imageView);
                         //Log.d(TAG, "Precargar: " + item.getId().getIm_id() + separador[tamanoImage] + heightImage);
                         imageView.setImageBitmap(bitmap);
 
