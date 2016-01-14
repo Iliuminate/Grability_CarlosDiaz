@@ -41,7 +41,7 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
     int numBloques=2;
 
 
-    //Identifica si se realizará desde de internet o de manera local
+    // "tipoCarga "Identifica si se realizará desde de internet o de manera local
     // 0-Internet, 1-Local
     int tipoCarga;
     //El separador se requiere para armar el nombre al momento de almacenar la imagen
@@ -96,6 +96,7 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
         MyViewHolder holder = new MyViewHolder(itemView);
         return holder;
     }
+
 
 
     @Override
@@ -159,8 +160,8 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
                     public void onResponse(Bitmap bitmap) {
 
                         //Cargamos la Imagen en el ImageView
-                        parametrizarImageView(heightImage,imageView);
-                        Log.d(TAG, "Precargar: " + item.getId().getIm_id() + separador[tamanoImage] + heightImage);
+                        parametrizarImageView(heightImage, imageView);
+                        //Log.d(TAG, "Precargar: " + item.getId().getIm_id() + separador[tamanoImage] + heightImage);
                         imageView.setImageBitmap(bitmap);
 
 
@@ -200,7 +201,7 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
         parametrizarImageView(heightImage,imageView);
 
         /*//Menaje en el Lod como apoyo para verificar la carga Local*/
-        Log.d(TAG,"CargarImagenLocal: "+item.getId().getIm_id()+separador[tamanoImage]+heightImage);
+        //Log.d(TAG,"CargarImagenLocal: "+item.getId().getIm_id()+separador[tamanoImage]+heightImage);
 
         //Se busca y se carga la Imagen en el ImageView
         getInternalImage=new GetInternalImage(item.getId().getIm_id()+separador[tamanoImage]+heightImage,imageView, context);
@@ -239,14 +240,16 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
     }
 
 
+    /**
+     * Informamos que ubo cambio en los datos
+     * @param datas
+     */
     public void reloadData(ArrayList<EntryClass> datas){
-        Log.d(TAG,"Reload Data0 Size: "+datas.size());
         data.clear();
         data.addAll(datas);
         notifyDataSetChanged();
-        Log.d(TAG, "Reload Data1 Size: " + data.size());
-        Log.d(TAG, "Reload Data2 Size: " + datas.size());
     }
+
 
 
 }

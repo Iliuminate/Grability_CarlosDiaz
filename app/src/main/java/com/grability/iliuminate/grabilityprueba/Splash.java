@@ -44,7 +44,23 @@ public class Splash extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Lanzar_Inicio();
+
+
+                int densidad=getDisplayParameters().get(2);
+
+                if(densidad<380){
+                    Log.e(TAG,"Desidad <380: "+densidad);
+                    lanzarMainTablet();
+                }else{
+                    if (densidad>540)
+                    {
+                        Log.e(TAG,"Desidad >540: "+densidad);
+                        lanzarMainTablet();
+                    }
+                    else
+                    lanzarMain();
+                }
+
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
             }
@@ -93,11 +109,19 @@ public class Splash extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void Lanzar_Inicio()
+    private void lanzarMain()
     {
         Intent i=new Intent(this, MainNavigation.class);
         startActivity(i);
     }
+
+
+    private void lanzarMainTablet()
+    {
+        Intent i=new Intent(this, MainNavigationTablet.class);
+        startActivity(i);
+    }
+
 
     @Override
     protected void onStop() {
@@ -150,6 +174,10 @@ public class Splash extends AppCompatActivity {
         displayParameters.add(orientation);
 
 
+        Log.i(TAG, "Densidad por largo = " + densityDpi*heightPixels);
+        Log.i(TAG, "Densidad por ancho = " + densityDpi*widthPixels);
+        Log.i(TAG, "Densidad / largo = " + heightPixels/densityDpi);
+        Log.i(TAG, "Densidad / ancho = " + widthPixels/densityDpi);
         Log.i(TAG, "Esto es una = " + "...");
 
 

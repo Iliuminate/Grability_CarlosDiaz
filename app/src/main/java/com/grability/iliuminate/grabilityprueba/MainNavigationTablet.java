@@ -22,7 +22,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -52,14 +54,20 @@ public class MainNavigationTablet extends AppCompatActivity
 
     //Definicion de los Otros elementos principales
     FeedClass feedClass;
-    private final String TAG="MyRecyclerTablet";
+    ArrayList<EntryClass> entries;
+
+    private final String TAG="MainNavigationTablet";
+    private final int BloquesIniciales=3;
     Context contexto=MainNavigationTablet.this;
+    SeekBar barraColumnas;
+    TextView txtColumnas;
     int numeroBloques;
     List<String> listaCategorias;
 
     //Definicion de elementos para el Recycler View
     private static MyRecyclerViewAdapterTablet recyclerViewAdapter;
     private static RecyclerView recyclerView;
+    GridLayoutManager gridLayoutManager;
     NavigationView navigationView;
 
 
@@ -72,15 +80,20 @@ public class MainNavigationTablet extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
+        barraColumnas=(SeekBar)findViewById(R.id.seekBar);
+        txtColumnas=(TextView)findViewById(R.id.txtColumn);
+        txtColumnas.setText(BloquesIniciales+"");
+
         loadItems();
-        numeroBloques=determinarBloques();
+        numeroBloques=(BloquesIniciales);
 
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.addItemDecoration(new MarginDecoration(this));
         recyclerView.setHasFixedSize(true);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(contexto, numeroBloques));
+        gridLayoutManager = new GridLayoutManager(contexto, numeroBloques);
+        recyclerView.setLayoutManager(gridLayoutManager);
 
 
 
@@ -103,46 +116,19 @@ public class MainNavigationTablet extends AppCompatActivity
 
         navigationView= (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        //***************************************************************************************************************
+
+        barraColumnas.setOnSeekBarChangeListener(onSeekBarChangeListener);
+
     }
 
 
     //***************************************************************************************************************
-    private static class GridAdapter extends RecyclerView.Adapter<ViewHolderClass> {
 
-        private final ArrayList<EntryClass> entryClasses;
 
-        public GridAdapter(ArrayList<EntryClass> entryClasses) {
-            this.entryClasses = entryClasses;
-        }
-
-        @Override
-        public ViewHolderClass onCreateViewHolder(ViewGroup parent, int position) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-            return new ViewHolderClass(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolderClass holder, final int position) {
-            final EntryClass entryClass = entryClasses.get(position);
-
-            holder.titulo.setText(entryClass.getTitle());
-            holder.precio.setText(entryClass.getIm_price().getAmount());
-            holder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Context context = holder.imageView.getContext();
-                    //context.startActivity(new Intent(context, demo.activityClass));
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return entryClasses.size();
-        }
-    }
-
-    //*************************************************************************************************
+    //***************************************************************************************************************
 
 
 
@@ -166,25 +152,14 @@ public class MainNavigationTablet extends AppCompatActivity
                     String aux=jsonOffline.readLocalFile();
                     try {
                         feedClass = ParseJson.parseJsonFeedClass(new JSONObject(aux));
+                        alimentarVistas(feedClass, new JSONObject(aux));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }else {
                     feedClass = ParseJson.parseJsonFeedClass(response);
-                    prepararModoOffline(contexto, response.toString());
-                    ArrayList<EntryClass> entryList = new ArrayList<EntryClass>();
-                    entryList.addAll(feedClass.getEntryList());
-
-                    //Creamos el Adapter y cargamos en pantalla
-                    recyclerViewAdapter = new MyRecyclerViewAdapterTablet(contexto, entryList, 0, getDisplayParameters(), numeroBloques);
-                    recyclerView.setAdapter(recyclerViewAdapter);
-
-                    //Cargamos la lista de categorias
-                    listaCategorias = getListCategory(feedClass.getEntryList());
-                    agregarItemsNavigationViewMenu(listaCategorias, navigationView);
-                    invalidateOptionsMenu();
+                    alimentarVistas(feedClass,response);
                 }
-
             }
         }, new Response.ErrorListener(){
 
@@ -200,6 +175,27 @@ public class MainNavigationTablet extends AppCompatActivity
 
         return feedClass;
     }
+
+
+
+    private void alimentarVistas(FeedClass feedClass, JSONObject response){
+        entries=new ArrayList<EntryClass>();
+        entries.addAll(feedClass.getEntryList());
+        prepararModoOffline(contexto, response.toString());
+        ArrayList<EntryClass> entryList = new ArrayList<EntryClass>();
+        entryList.addAll(feedClass.getEntryList());
+
+        //Creamos el Adapter y cargamos en pantalla
+        recyclerViewAdapter = new MyRecyclerViewAdapterTablet(contexto, entryList, 0, getDisplayParameters(), numeroBloques);
+        recyclerView.setAdapter(recyclerViewAdapter);
+
+        //Cargamos la lista de categorias
+        listaCategorias = getListCategory(feedClass.getEntryList());
+        agregarItemsNavigationViewMenu(listaCategorias, navigationView);
+        invalidateOptionsMenu();
+    }
+
+
 
     /**
      * Para optener categorias de las EntrClass
@@ -306,6 +302,44 @@ public class MainNavigationTablet extends AppCompatActivity
     }
 
 
+
+    SeekBar.OnSeekBarChangeListener onSeekBarChangeListener=new SeekBar.OnSeekBarChangeListener() {
+
+        int j=2;
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+            j=(progress+2);
+
+            recyclerViewAdapter=new MyRecyclerViewAdapterTablet(contexto, entries, 0, getDisplayParameters(), j);
+            recyclerView.setAdapter(recyclerViewAdapter);
+
+            //Cargamos la lista de categorias
+            listaCategorias = getListCategory(feedClass.getEntryList());
+            agregarItemsNavigationViewMenu(listaCategorias, navigationView);
+            invalidateOptionsMenu();
+
+            //Ajustamos el numero de columnas que queremos mostrar
+            gridLayoutManager.setSpanCount(j);
+            gridLayoutManager.onItemsChanged(recyclerView);
+            //recyclerViewAdapter.reloadData(entries);
+            Log.d(TAG, "Numero de BloquesSeek: " + j);
+            txtColumnas.setText((j) + "");
+            numeroBloques=j;
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
+
+
+
     private void prepararModoOffline(Context context, String textoJson)
     {
         final JsonOffline jsonOffline=new JsonOffline(context);
@@ -317,13 +351,6 @@ public class MainNavigationTablet extends AppCompatActivity
     public void toastMessage(String msn){
         Toast.makeText(contexto, msn, Toast.LENGTH_SHORT).show();
     }
-
-    private int determinarBloques(){
-        int j=3;
-
-        return j;
-    }
-
 
 
 
@@ -369,7 +396,9 @@ public class MainNavigationTablet extends AppCompatActivity
         // Handle navigation view item clicks here.
 
         String label=(String)item.getTitle();
-        ArrayList<EntryClass> entries= new ArrayList<EntryClass>();
+        if(entries.equals(null))
+        {entries= new ArrayList<EntryClass>();}
+        else{entries.clear();}
         entries.addAll(feedClass.getEntryList());
         toastMessage(label);
 

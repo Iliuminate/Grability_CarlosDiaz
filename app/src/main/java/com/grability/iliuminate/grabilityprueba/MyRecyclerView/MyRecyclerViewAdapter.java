@@ -43,7 +43,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     final int tamanoImage=definirHeightImagen();
     Context context;
 
-    //Identifica si se realizará desde de internet o de manera local
+    // "tipoCarga" Identifica si se realizará desde de internet o de manera local
     // 0-Internet, 1-Local
     int tipoCarga;
     //El separador se requiere para armar el nombre al momento de almacenar la imagen
@@ -158,7 +158,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
                         //Cargamos la Imagen en el ImageView
                         parametrizarImageView(heightImage,imageView);
-                        Log.d(TAG, "Precargar: " + item.getId().getIm_id() + separador[tamanoImage] + heightImage);
+                        //Log.d(TAG, "Precargar: " + item.getId().getIm_id() + separador[tamanoImage] + heightImage);
                         imageView.setImageBitmap(bitmap);
 
 
