@@ -1,10 +1,12 @@
 package com.grability.iliuminate.grabilityprueba.EntryClasses;
 
+import java.io.Serializable;
+
 /**
  * Created by Iliuminate on 09/01/2016.
  */
 @SuppressWarnings("serial")
-public class EntryClassImReleaseDate {
+public class EntryClassImReleaseDate implements Serializable {
 
     String label, labelAttributes;
 

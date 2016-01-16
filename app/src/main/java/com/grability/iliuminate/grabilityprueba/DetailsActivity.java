@@ -14,15 +14,32 @@ import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
+import com.grability.iliuminate.grabilityprueba.OfflineManager.GetInternalImage;
+import com.grability.iliuminate.grabilityprueba.ParametersClasses.KeysFeed;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    private static final String TAG = "DETAIL";
     public static  String POSITION="posicion";
+
+    ImageView imageView;
+    TextView txtTitulo,
+            txtCategoria,
+            txtPrecio,
+            txtDescripcion,
+            txtEnlace,
+            txtLanzamiento;
+
+    EntryClass entryClass;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +51,57 @@ public class DetailsActivity extends AppCompatActivity {
         toolBarLayout.setTitle(getTitle());
 
 
+        entryClass=(EntryClass)getIntent().getExtras().get(KeysFeed.KEY_ENTRY);
+        Log.d(TAG,entryClass.toString());
+        inicializarVariables();
+        alimentarVistas();
+
+
 
         //**************************************************************************
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, getResources().getText(R.string.your_action_event), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
         //**************************************************************************
 
+    }
 
+    private void inicializarVariables()
+    {
+        imageView=(ImageView)findViewById(R.id.imageDetails);
+        txtTitulo=(TextView)findViewById(R.id.detailTitle);
+        txtCategoria=(TextView)findViewById(R.id.detailCategoryTxt);
+        txtPrecio=(TextView)findViewById(R.id.detailPrice);
+        txtDescripcion=(TextView)findViewById(R.id.detailSumaryText);
+        txtEnlace=(TextView)findViewById(R.id.detailLink);
+        txtLanzamiento=(TextView)findViewById(R.id.detailRelease);
+    }
+
+    private void alimentarVistas()
+    {
+        GetInternalImage getInternalImage =new GetInternalImage(
+                entryClass.getIdNameImage(),imageView,DetailsActivity.this);
+        Log.d(TAG,"ImageName: "+entryClass.getIdNameImage());
+
+        txtTitulo.setText(entryClass.getIm_name());
+        txtCategoria.setText(entryClass.getCategory().getTerm());
+        txtPrecio.setText("$ "+entryClass.getIm_price().getAmount()+" "+entryClass.getIm_price().getCurrency());
+        txtDescripcion.setText(entryClass.getSummary());
+        txtEnlace.setText(entryClass.getLink().getHref());
+        txtLanzamiento.setText(entryClass.getIm_relaseDate().getLabelAttributes());
+
+    }
+
+
+
+
+
+    //Algunas animaciones para agregar posteriormente
         /*Window window = getWindow();
         // Elegir transiciones
         switch (position) {
@@ -115,13 +170,4 @@ public class DetailsActivity extends AppCompatActivity {
                 break;
 
         }*/
-    }
-
-    //Declaramos el metodo que usaremos para llamar Actividad con los detalles
-    public static void launch(Activity context, int position, EntryClass entryClass) {
-        Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra(POSITION, position);
-        context.startActivity(intent);
-
-    }
 }

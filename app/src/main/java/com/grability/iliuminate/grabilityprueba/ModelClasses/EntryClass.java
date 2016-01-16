@@ -21,6 +21,7 @@ public class EntryClass implements Serializable {
             summary,
             rights,
             title;
+    String idNameImage;
 
     EntryClassImPrice im_price;
     EntryClassImContentType im_contetType;
@@ -137,6 +138,14 @@ public class EntryClass implements Serializable {
 
     public void setIm_image(ArrayList<EntryClassImImage> im_image) {
         this.im_image = im_image;
+    }
+
+    public String getIdNameImage() {
+        return idNameImage;
+    }
+
+    public void setIdNameImage(String idNameImage) {
+        this.idNameImage = idNameImage;
     }
 
     @Override

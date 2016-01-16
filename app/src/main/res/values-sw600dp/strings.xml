@@ -2,7 +2,8 @@
     <string name="app_name">Grability Prueba</string>
     <string name="developer">CARLOS ENRIQUE DIAZ ARANDIA</string>
     <string name="action_settings">MODO TABLETA</string>
-    <string name="action_settings_tablet">MODO SMARTPHONE</string>
+    <string name="action_rotar_port">ROTAR PORTRAIT</string>
+    <string name="action_rotar_lan">ROTAR LANDSCAPE</string>
 
     <string name="all_aplication">All Applications</string>
     <string name="your_action_event">Aquí se puede agregar alguna acción o evento</string>

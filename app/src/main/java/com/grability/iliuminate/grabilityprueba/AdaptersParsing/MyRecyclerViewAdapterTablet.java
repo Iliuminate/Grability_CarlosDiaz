@@ -16,7 +16,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
+import com.grability.iliuminate.grabilityprueba.MainNavigationTablet;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
+import com.grability.iliuminate.grabilityprueba.ModelClasses.MyViewHolder;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.GetInternalImage;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.SaveImage;
 import com.grability.iliuminate.grabilityprueba.R;
@@ -28,7 +30,7 @@ import java.util.List;
 /**
  * Created by Iliuminate on 11/01/2016.
  */
-public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecyclerViewAdapterTablet.MyViewHolder> {
+public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyViewHolder> {
 
     List<EntryClass> data = Collections.emptyList();
     List<Integer> displayParameter;
@@ -39,12 +41,13 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
     Context context;
     int numBloques=2;
 
-
     // "tipoCarga "Identifica si se realizará desde de internet o de manera local
     // 0-Internet, 1-Local
     int tipoCarga;
+
     //El separador se requiere para armar el nombre al momento de almacenar la imagen
     final String[] separador=new String[3];
+
     private final String TAG="MyRecyclerAdapter";
 
 
@@ -62,25 +65,6 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
         separador[2]="HIGH";
     }
 
-    //
-    class MyViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView imageView;
-        TextView titulo, precio;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-
-            //Instanciamos o declaramos el contenido del View (Item para este caso)
-            imageView = (ImageView) itemView.findViewById(R.id.itemImage);
-            titulo=(TextView)itemView.findViewById(R.id.itemTitle);
-            precio=(TextView)itemView.findViewById(R.id.itemPrice);
-
-            //Se puede agregar un evento OnClickListener
-            //itemView.setOnClickListener(context.myOnClickListener);
-        }
-    }
-
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -95,7 +79,6 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
         MyViewHolder holder = new MyViewHolder(itemView);
         return holder;
     }
-
 
 
     @Override
@@ -135,7 +118,10 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
         return data.size();
     }
 
-
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
 
     //***********************************************************************************************
     //****Metodos para tratar las Imagenes****
@@ -174,8 +160,10 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
                                     //Contexto
                                     context
                             );
-                            Log.d(TAG,"PostGuardar: "+item.getId().getIm_id() + separador[tamanoImage] + heightImage);
+                            item.setIdNameImage(item.getId().getIm_id() + separador[tamanoImage] + heightImage);
+                            //Log.d(TAG,"PostGuardar: "+item.getId().getIm_id() + separador[tamanoImage] + heightImage);
                         }
+
 
                     }
                 }, 0, 0, null,null,
@@ -204,6 +192,7 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
 
         //Se busca y se carga la Imagen en el ImageView
         getInternalImage=new GetInternalImage(item.getId().getIm_id()+separador[tamanoImage]+heightImage,imageView, context);
+        item.setIdNameImage(item.getId().getIm_id() + separador[tamanoImage] + heightImage);
     }
 
 
@@ -248,6 +237,27 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
         data.addAll(datas);
         notifyDataSetChanged();
     }
+
+
+
+    /*//
+    class MyViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView imageView;
+        TextView titulo, precio;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+
+            //Instanciamos o declaramos el contenido del View (Item para este caso)
+            imageView = (ImageView) itemView.findViewById(R.id.itemImage);
+            titulo=(TextView)itemView.findViewById(R.id.itemTitle);
+            precio=(TextView)itemView.findViewById(R.id.itemPrice);
+
+            //Se puede agregar un evento OnClickListener
+            //itemView.setOnClickListener(context.myOnClickListener);
+        }
+    }*/
 
 
 

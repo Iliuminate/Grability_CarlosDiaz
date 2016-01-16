@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import android.app.Activity;
 
+import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
 
 
 /**

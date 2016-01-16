@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.grability.iliuminate.grabilityprueba.AdaptersParsing.ParseJson;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.FeedClass;
+import com.grability.iliuminate.grabilityprueba.MyRecyclerView.ItemClickSupport;
 import com.grability.iliuminate.grabilityprueba.MyRecyclerView.MarginDecoration;
 import com.grability.iliuminate.grabilityprueba.AdaptersParsing.MyRecyclerViewAdapterTablet;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.JsonOffline;
@@ -68,6 +70,8 @@ public class MainNavigationTablet extends AppCompatActivity
     GridLayoutManager gridLayoutManager;
     NavigationView navigationView;
 
+    //Evento Click
+    ItemClickSupport.OnItemClickListener onItemClickListener;
 
 
     @Override
@@ -78,15 +82,15 @@ public class MainNavigationTablet extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         setMyScreenOrientation();
+        instanciarEventosClick();
 
 
         barraColumnas=(SeekBar)findViewById(R.id.seekBar);
         txtColumnas=(TextView)findViewById(R.id.txtColumn);
-        txtColumnas.setText(BloquesIniciales+"");
+        txtColumnas.setText(BloquesIniciales + "");
 
         loadItems();
         numeroBloques=(BloquesIniciales);
-
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.addItemDecoration(new MarginDecoration(this));
@@ -94,6 +98,9 @@ public class MainNavigationTablet extends AppCompatActivity
         gridLayoutManager = new GridLayoutManager(contexto, numeroBloques);
         recyclerView.setLayoutManager(gridLayoutManager);
 
+
+        ItemClickSupport itemClickSupport= ItemClickSupport.addTo(recyclerView);
+        itemClickSupport.setOnItemClickListener(onItemClickListener);
 
 
         //********************************************************************************************
@@ -116,10 +123,9 @@ public class MainNavigationTablet extends AppCompatActivity
         navigationView= (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        //***************************************************************************************************************
-
         barraColumnas.setOnSeekBarChangeListener(onSeekBarChangeListener);
+
+
 
     }
 
@@ -181,6 +187,7 @@ public class MainNavigationTablet extends AppCompatActivity
     private void alimentarVistas(FeedClass feedClass, JSONObject response){
         entries=new ArrayList<EntryClass>();
         entries.addAll(feedClass.getEntryList());
+        forDetailEntries.addAll(feedClass.getEntryList());
         prepararModoOffline(contexto, response.toString());
         ArrayList<EntryClass> entryList = new ArrayList<EntryClass>();
         entryList.addAll(feedClass.getEntryList());
@@ -367,6 +374,33 @@ public class MainNavigationTablet extends AppCompatActivity
         return size;
     }
 
+
+
+    //***************************************************************************************************************
+    //***************************************************************************************************************
+
+    /**
+     * Inicializamos los eventos Click
+     */
+    public void instanciarEventosClick(){
+
+        onItemClickListener=new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                mostrarDetalles(forDetailEntries.get(position));
+            }
+        };
+    }
+
+
+    private void mostrarDetalles(EntryClass entryClass){
+        Intent intent=new Intent(contexto, DetailsActivity.class);
+        intent.putExtra(KeysFeed.KEY_ENTRY,entryClass);
+        startActivity(intent);
+    }
+
+
+    //***************************************************************************************************************
     //***************************************************************************************************************
 
 
@@ -389,19 +423,19 @@ public class MainNavigationTablet extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(contexto, MainNavigation.class));
-            return true;
+        /*if (id == R.id.rotarLandscape) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
+        if (id == R.id.rotarPortrait) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
+
+    ArrayList<EntryClass> forDetailEntries=new ArrayList<EntryClass>();
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -414,14 +448,17 @@ public class MainNavigationTablet extends AppCompatActivity
         else{entries.clear();}
         entries.addAll(feedClass.getEntryList());
         toastMessage(label);
+        forDetailEntries.clear();
 
         for (String lb: listaCategorias){
             if(lb.equals(label)){
-                recyclerViewAdapter.reloadData(resultQuery(lb, entries));
+                forDetailEntries.addAll(resultQuery(lb, entries));
+                recyclerViewAdapter.reloadData(forDetailEntries);
             }
         }
 
         if(label.equals(getResources().getString(R.string.all_aplication))){
+            forDetailEntries.addAll(feedClass.getEntryList());
             recyclerViewAdapter.reloadData(feedClass.getEntryList());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

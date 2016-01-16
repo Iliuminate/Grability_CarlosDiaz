@@ -39,35 +39,18 @@ public class Splash extends AppCompatActivity {
             actionBar.hide();
         }
 
-        getDisplayParameters();
-
 
         // Clase en la que está el código a ejecutar
         TimerTask timerTask = new TimerTask()
         {
             public void run()
             {
-                int densidad=getDisplayParameters().get(2);
-
-                if(densidad<380){
-                    Log.e(TAG,"Desidad <380: "+densidad);
-                    lanzarMainTablet();
-                }else{
-                    if (densidad>540)
-                    {
-                        Log.e(TAG,"Desidad >540: "+densidad);
-                        lanzarMainTablet();
-                    }
-                    else
-                        lanzarMain();
-                }
+               lanzarMainTablet();
             }
         };
-        // Aquí se pone en marcha el timer cada segundo.
         Timer timer = new Timer();
-        // Dentro de 0 milisegundos avísame cada 1000 milisegundos
         timer.schedule(timerTask, 3200);
-        //timer.scheduleAtFixedRate(timerTask, 0, 3000);//Para controlar ciclos
+
     }
 
     @Override
@@ -92,11 +75,6 @@ public class Splash extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void lanzarMain()
-    {
-        Intent i=new Intent(this, MainNavigation.class);
-        startActivity(i);
-    }
 
 
     private void lanzarMainTablet()
@@ -112,45 +90,5 @@ public class Splash extends AppCompatActivity {
         finish();
     }
 
-
-    /**
-     * List<Integer> [0-3]: Width, Height, Density, Orientation
-     * @return
-     */
-    public List<Integer> getDisplayParameters()
-    {
-        Display display = getWindowManager().getDefaultDisplay();
-        List<Integer> displayParameters=new ArrayList<Integer>();
-
-        // Tamaño en píxeles
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-
-
-        // dpi
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int heightPixels = metrics.heightPixels;
-        int widthPixels = metrics.widthPixels;
-        int densityDpi = metrics.densityDpi;
-        float xdpi = metrics.xdpi;
-        float ydpi = metrics.ydpi;
-
-
-        // Orientación (1 portrait, 2 Landscape)
-        int orientation = getResources().getConfiguration().orientation;
-        Log.i(TAG, "Orientación       = " + orientation);
-
-        displayParameters.add(widthPixels);//Width
-        displayParameters.add(heightPixels);//Height
-        displayParameters.add(densityDpi);//Density
-        displayParameters.add(orientation);
-
-
-
-        return displayParameters;
-    }
 
 }

@@ -8,10 +8,71 @@
     tools:context="com.grability.iliuminate.grabilityprueba.DetailsActivity"
     tools:showIn="@layout/activity_details">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detailTitulo"
+            android:id="@+id/detailTitle"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearance"
+            android:layout_marginTop="@dimen/fab_content_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detailPrice"
+            android:id="@+id/detailPrice" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detailSummary"
+            android:id="@+id/detailSummaary"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearance"
+            android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txtNull"
+            android:id="@+id/detailSumaryText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detailLink"
+            android:id="@+id/detailLink"
+            android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detailCategory"
+            android:id="@+id/detailCategory"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearance"
+            android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txtNull"
+            android:id="@+id/detailCategoryTxt" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/detailRelease"
+            android:text="@string/detailRelease" />
+
+    </LinearLayout>
+
 
 </android.support.v4.widget.NestedScrollView>

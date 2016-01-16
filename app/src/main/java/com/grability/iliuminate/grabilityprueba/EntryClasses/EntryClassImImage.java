@@ -1,13 +1,16 @@
 package com.grability.iliuminate.grabilityprueba.EntryClasses;
 
+import java.io.Serializable;
+
 /**
  * Created by Iliuminate on 08/01/2016.
  */
 @SuppressWarnings("serial")
-public class EntryClassImImage {
+public class EntryClassImImage implements Serializable {
 
     String  label,
-            height;
+            height,
+            id;
 
     public EntryClassImImage() {
     }
@@ -31,6 +34,14 @@ public class EntryClassImImage {
 
     public void setHeight(String height) {
         this.height = height;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

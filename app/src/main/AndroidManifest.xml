@@ -22,11 +22,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainNavigation"
-            android:label="@string/title_activity_main_navigation"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".MainNavigationTablet"
             android:label="@string/title_activity_main_navigation_tablet"
             android:screenOrientation="portrait"

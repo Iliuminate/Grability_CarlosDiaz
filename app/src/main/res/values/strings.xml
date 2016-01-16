@@ -2,7 +2,8 @@
     <string name="app_name">Grability Prueba</string>
     <string name="developer">CARLOS ENRIQUE DIAZ ARANDIA</string>
     <string name="action_settings">MODO TABLETA</string>
-    <string name="action_settings_tablet">MODO SMARTPHONE</string>
+    <string name="action_rotar_port">ROTAR PORTRAIT</string>
+    <string name="action_rotar_lan">ROTAR LANDSCAPE</string>
 
     <string name="all_aplication">All Applications</string>
     <string name="your_action_event">Aquí se puede agregar alguna acción o evento</string>
@@ -20,14 +21,14 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="title_activity_main_navigation">MainNavigation</string>
+    <string name="title_activity_main_navigation">Grability Prueba</string>
 
 
     <!--String -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_activity_main_navigation_tablet">MainNavigationTablet</string>
-    <string name="title_activity_details">DetailsActivity</string>
+    <string name="title_activity_main_navigation_tablet">Grability Prueba</string>
+    <string name="title_activity_details">Detalles del App</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -117,4 +118,11 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="txtNull" />
+    <string name="detailTitulo">Título</string>
+    <string name="detailPrice">Precio</string>
+    <string name="detailSummary">Descripción</string>
+    <string name="detailLink">http://link.com</string>
+    <string name="detailCategory">Categoria</string>
+    <string name="detailRelease">Enero 01, 2016</string>
 </resources>

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_settings"
+    <!--<item
+        android:id="@+id/rotarPortrait"
         android:orderInCategory="100"
-        android:title="@string/action_settings_tablet"
+        android:title="@string/action_rotar_port"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/rotarLandscape"
+        android:orderInCategory="100"
+        android:title="@string/action_rotar_lan"
+        app:showAsAction="never" />-->
 </menu>
