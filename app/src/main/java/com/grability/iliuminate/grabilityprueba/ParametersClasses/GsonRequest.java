@@ -1,4 +1,4 @@
-package com.grability.iliuminate.grabilityprueba.ControlClasses;
+package com.grability.iliuminate.grabilityprueba.ParametersClasses;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;

@@ -3,6 +3,7 @@ package com.grability.iliuminate.grabilityprueba.EntryClasses;
 /**
  * Created by Iliuminate on 08/01/2016.
  */
+@SuppressWarnings("serial")
 public class EntryClassImImage {
 
     String  label,

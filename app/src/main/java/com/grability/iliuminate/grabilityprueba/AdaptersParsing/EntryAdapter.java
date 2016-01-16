@@ -1,15 +1,13 @@
-package com.grability.iliuminate.grabilityprueba.Adapters;
+package com.grability.iliuminate.grabilityprueba.AdaptersParsing;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -17,9 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
-import com.grability.iliuminate.grabilityprueba.ControlClasses.DisplayParameters;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
-import com.grability.iliuminate.grabilityprueba.ModelClasses.FeedClass;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.GetInternalImage;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.SaveImage;
 import com.grability.iliuminate.grabilityprueba.R;
@@ -88,7 +84,7 @@ public class EntryAdapter extends ArrayAdapter {
         if (null == convertView) {
             //Si no existe, entonces inflarlo
             listItemView = null == convertView ? layoutInflater.inflate(
-                    R.layout.item,
+                    R.layout.item_card,
                     parent,
                     false):convertView;
         }

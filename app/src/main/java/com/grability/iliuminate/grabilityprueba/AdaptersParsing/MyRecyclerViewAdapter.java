@@ -1,6 +1,8 @@
-package com.grability.iliuminate.grabilityprueba.MyRecyclerView;
+package com.grability.iliuminate.grabilityprueba.AdaptersParsing;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -17,9 +18,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
+import com.grability.iliuminate.grabilityprueba.DetailsActivity;
+import com.grability.iliuminate.grabilityprueba.MainNavigation;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.GetInternalImage;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.SaveImage;
+import com.grability.iliuminate.grabilityprueba.ParametersClasses.OnClickEvents;
 import com.grability.iliuminate.grabilityprueba.R;
 
 import java.util.ArrayList;
@@ -29,7 +33,8 @@ import java.util.List;
 /**
  * Created by Iliuminate on 11/01/2016.
  */
-public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecyclerViewAdapterTablet.MyViewHolder> {
+public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder>
+        implements ItemClickListener {
 
     List<EntryClass> data = Collections.emptyList();
     List<Integer> displayParameter;
@@ -38,10 +43,10 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
     private LayoutInflater inflater;
     final int tamanoImage=definirHeightImagen();
     Context context;
-    int numBloques=2;
+    EntryClass entryClassRecicler;
 
 
-    // "tipoCarga "Identifica si se realizará desde de internet o de manera local
+    // "tipoCarga" Identifica si se realizará desde de internet o de manera local
     // 0-Internet, 1-Local
     int tipoCarga;
     //El separador se requiere para armar el nombre al momento de almacenar la imagen
@@ -50,53 +55,27 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
 
 
 
-    public MyRecyclerViewAdapterTablet(Context context, List<EntryClass> data, int tipoCarga, List<Integer> displayParameter, int numBloques) {
+    //Constructor del ReyclerView.Adapter
+    public MyRecyclerViewAdapter(Context context, List<EntryClass> data, int tipoCarga, List<Integer> displayParameter) {
 
         inflater = LayoutInflater.from(context);
         this.context=context;
         this.data = data;
         this.displayParameter=displayParameter;
         this.tipoCarga=tipoCarga;
-        this.numBloques=numBloques;
         separador[0]="LOW";
         separador[1]="MEDIUM";
         separador[2]="HIGH";
-    }
-
-    //
-    class MyViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView imageView;
-        TextView titulo, precio;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-
-            //Instanciamos o declaramos el contenido del View (Item para este caso)
-            imageView = (ImageView) itemView.findViewById(R.id.itemImage);
-            titulo=(TextView)itemView.findViewById(R.id.itemTitle);
-            precio=(TextView)itemView.findViewById(R.id.itemPrice);
-
-            //Se puede agregar un evento OnClickListener
-            //itemView.setOnClickListener(context.myOnClickListener);
-        }
     }
 
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
-        View itemView=null;
-        if(numBloques>2) {
-            itemView = inflater.inflate(R.layout.item_tablet, viewGroup, false);
-        }else {
-            itemView = inflater.inflate(R.layout.item_card, viewGroup, false);
-        }
-        //Instanciamos la clase Holder(para esta caso myViewHolder) y la retornamos
+        View itemView = inflater.inflate(R.layout.item_card, viewGroup, false);
         MyViewHolder holder = new MyViewHolder(itemView);
         return holder;
     }
-
 
 
     @Override
@@ -104,6 +83,7 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
 
         //Por medio de esta se pueden pasar los parametros al view
         EntryClass currentData = data.get(i);
+        entryClassRecicler=data.get(i);
 
         //Recuperamos el contexto del view
         Context context = myViewHolder.imageView.getContext();
@@ -127,7 +107,7 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
 
         // Actualizar los Views
         myViewHolder.titulo.setText(currentData.getTitle());
-        myViewHolder.precio.setText("$ "+currentData.getIm_price().getAmount()+" "+currentData.getIm_price().getCurrency());
+        myViewHolder.precio.setText("$ " + currentData.getIm_price().getAmount() + " " + currentData.getIm_price().getCurrency());
     }
 
 
@@ -137,6 +117,40 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
     }
 
 
+    @Override
+    public void onItemClick(View view, int position) {
+        DetailsActivity.launch(
+                (Activity)context, position, entryClassRecicler);
+    }
+
+
+    class MyViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView imageView;
+        TextView titulo, precio;
+        EntryClass entryClass;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+
+            //Instanciamos o declaramos el contenido del View (Item para este caso)
+            imageView = (ImageView) itemView.findViewById(R.id.itemImage);
+            titulo=(TextView)itemView.findViewById(R.id.itemTitle);
+            precio=(TextView)itemView.findViewById(R.id.itemPrice);
+
+
+                    //Se asiganan los evento Click
+            imageView.setOnClickListener(MainNavigation.myOnClickImagenListener);
+            titulo.setOnClickListener(MainNavigation.myOnClickTextViewListener);
+
+        }
+
+//        public void asignarEvento(Context context, EntryClass entryClass){
+//            OnClickEvents onClickEvents=new OnClickEvents(context, entryClass);
+//            precio.setOnClickListener(onClickEvents.myOnClickListener);
+//        }
+
+    }
 
     //***********************************************************************************************
     //****Metodos para tratar las Imagenes****
@@ -175,7 +189,7 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
                                     //Contexto
                                     context
                             );
-                            Log.d(TAG,"PostGuardar: "+item.getId().getIm_id() + separador[tamanoImage] + heightImage);
+                            //Log.d(TAG,"PostGuardar: "+item.getId().getIm_id() + separador[tamanoImage] + heightImage);
                         }
 
                     }
@@ -201,7 +215,7 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
         parametrizarImageView(heightImage,imageView);
 
         /*//Menaje en el Lod como apoyo para verificar la carga Local*/
-        //Log.d(TAG,"CargarImagenLocal: "+item.getId().getIm_id()+separador[tamanoImage]+heightImage);
+        //Log.d(TAG, "CargarImagenLocal: " + item.getId().getIm_id() + separador[tamanoImage] + heightImage);
 
         //Se busca y se carga la Imagen en el ImageView
         getInternalImage=new GetInternalImage(item.getId().getIm_id()+separador[tamanoImage]+heightImage,imageView, context);
@@ -234,24 +248,25 @@ public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecycler
     private void parametrizarImageView(int heightImage, ImageView imageView){
         int marginImage=(int)heightImage/6;
         int lado=(int)(heightImage*1.8);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(lado, lado);
-        layoutParams.setMargins(marginImage,marginImage,marginImage,marginImage);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(lado,lado);
+        layoutParams.setMargins(marginImage, marginImage, marginImage, marginImage);
         imageView.setLayoutParams(layoutParams);
     }
 
 
-    /**
-     * Informamos que ubo cambio en los datos
-     * @param datas
-     */
     public void reloadData(ArrayList<EntryClass> datas){
+        Log.d(TAG,"Reload Data0 Size: "+datas.size());
         data.clear();
         data.addAll(datas);
         notifyDataSetChanged();
+        Log.d(TAG, "Reload Data1 Size: " + data.size());
+        Log.d(TAG,"Reload Data2 Size: "+datas.size());
     }
 
+}
 
-
+interface ItemClickListener {
+    void onItemClick(View view, int position);
 }
 
 

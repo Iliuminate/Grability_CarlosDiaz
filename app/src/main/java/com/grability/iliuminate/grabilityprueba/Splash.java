@@ -39,13 +39,14 @@ public class Splash extends AppCompatActivity {
             actionBar.hide();
         }
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        getDisplayParameters();
 
 
+        // Clase en la que está el código a ejecutar
+        TimerTask timerTask = new TimerTask()
+        {
+            public void run()
+            {
                 int densidad=getDisplayParameters().get(2);
 
                 if(densidad<380){
@@ -58,33 +59,15 @@ public class Splash extends AppCompatActivity {
                         lanzarMainTablet();
                     }
                     else
-                    lanzarMain();
+                        lanzarMain();
                 }
-
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-            }
-        });
-
-
-        getDisplayParameters();
-
-
-
-
-        /*// Clase en la que está el código a ejecutar
-        TimerTask timerTask = new TimerTask()
-        {
-            public void run()
-            {
-                Lanzar_Inicio();
             }
         };
         // Aquí se pone en marcha el timer cada segundo.
         Timer timer = new Timer();
         // Dentro de 0 milisegundos avísame cada 1000 milisegundos
         timer.schedule(timerTask, 3200);
-        //timer.scheduleAtFixedRate(timerTask, 0, 3000);//Para controlar ciclos*/
+        //timer.scheduleAtFixedRate(timerTask, 0, 3000);//Para controlar ciclos
     }
 
     @Override
@@ -144,8 +127,7 @@ public class Splash extends AppCompatActivity {
         display.getSize(size);
         int width = size.x;
         int height = size.y;
-        Log.i(TAG, "Ancho             = " + width);
-        Log.i(TAG, "Alto              = " + height);
+
 
         // dpi
         DisplayMetrics metrics = new DisplayMetrics();
@@ -155,14 +137,7 @@ public class Splash extends AppCompatActivity {
         int densityDpi = metrics.densityDpi;
         float xdpi = metrics.xdpi;
         float ydpi = metrics.ydpi;
-        Log.i(TAG, "Ancho en píxeles  = " + widthPixels);
-        Log.i(TAG, "Alto en píxeles   = " + heightPixels);
-        Log.i(TAG, "Densidad dpi      = " + densityDpi);
-        Log.i(TAG, "x dpi             = " + xdpi);
-        Log.i(TAG, "y dpi             = " + ydpi);
 
-        Log.i(TAG, "Rel. Ancho        = " + (widthPixels/xdpi));
-        Log.i(TAG, "Rel. Alto         = " + (heightPixels/ydpi));
 
         // Orientación (1 portrait, 2 Landscape)
         int orientation = getResources().getConfiguration().orientation;
@@ -173,12 +148,6 @@ public class Splash extends AppCompatActivity {
         displayParameters.add(densityDpi);//Density
         displayParameters.add(orientation);
 
-
-        Log.i(TAG, "Densidad por largo = " + densityDpi*heightPixels);
-        Log.i(TAG, "Densidad por ancho = " + densityDpi*widthPixels);
-        Log.i(TAG, "Densidad / largo = " + heightPixels/densityDpi);
-        Log.i(TAG, "Densidad / ancho = " + widthPixels/densityDpi);
-        Log.i(TAG, "Esto es una = " + "...");
 
 
         return displayParameters;

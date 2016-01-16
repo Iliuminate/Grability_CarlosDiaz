@@ -21,16 +21,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecyclerView.MyActivity" />
         <activity
             android:name=".MainNavigation"
             android:label="@string/title_activity_main_navigation"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainNavigationTablet"
             android:label="@string/title_activity_main_navigation_tablet"
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DetailsActivity"
+            android:label="@string/title_activity_details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

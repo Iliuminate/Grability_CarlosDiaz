@@ -1,4 +1,4 @@
-package com.grability.iliuminate.grabilityprueba.ControlClasses;
+package com.grability.iliuminate.grabilityprueba.ParametersClasses;
 
 import android.content.Context;
 import android.graphics.Bitmap;

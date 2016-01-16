@@ -1,4 +1,4 @@
-package com.grability.iliuminate.grabilityprueba.ControlClasses;
+package com.grability.iliuminate.grabilityprueba.ParametersClasses;
 
 /**
  * Created by Iliuminate on 12/01/2016.

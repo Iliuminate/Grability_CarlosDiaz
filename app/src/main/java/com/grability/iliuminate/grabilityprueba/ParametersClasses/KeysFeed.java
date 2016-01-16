@@ -1,10 +1,14 @@
-package com.grability.iliuminate.grabilityprueba.ControlClasses;
+package com.grability.iliuminate.grabilityprueba.ParametersClasses;
 
 /**
  * Created by Iliuminate on 09/01/2016.
  */
 public class KeysFeed {
 
+    //Globals
+    public static final String SCREEN_TYPE="phone";
+
+    //Nivel 0
     public static final String KEY_FEED="feed";
     public static final String KEY_LABEL="label";
     public static final String KEY_ATTRIBUTES="attributes";

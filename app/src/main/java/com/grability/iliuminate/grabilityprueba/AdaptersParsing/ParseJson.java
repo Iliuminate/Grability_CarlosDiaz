@@ -1,4 +1,4 @@
-package com.grability.iliuminate.grabilityprueba.ControlClasses;
+package com.grability.iliuminate.grabilityprueba.AdaptersParsing;
 
 import android.util.Log;
 
@@ -13,6 +13,7 @@ import com.grability.iliuminate.grabilityprueba.EntryClasses.EntryClassImRelease
 import com.grability.iliuminate.grabilityprueba.EntryClasses.EntryClassLink;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.FeedClass;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.LinkClass;
+import com.grability.iliuminate.grabilityprueba.ParametersClasses.KeysFeed;
 
 import org.json.JSONArray;
 import org.json.JSONException;

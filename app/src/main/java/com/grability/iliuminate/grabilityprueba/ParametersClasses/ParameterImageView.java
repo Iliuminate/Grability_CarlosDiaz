@@ -1,6 +1,5 @@
-package com.grability.iliuminate.grabilityprueba.ControlClasses;
+package com.grability.iliuminate.grabilityprueba.ParametersClasses;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.grability.iliuminate.grabilityprueba.R;

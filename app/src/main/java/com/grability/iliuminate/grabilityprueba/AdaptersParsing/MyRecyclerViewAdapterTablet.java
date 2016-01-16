@@ -1,10 +1,7 @@
-package com.grability.iliuminate.grabilityprueba.MyRecyclerView;
+package com.grability.iliuminate.grabilityprueba.AdaptersParsing;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,14 +16,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
-import com.grability.iliuminate.grabilityprueba.ControlClasses.ParameterImageView;
-import com.grability.iliuminate.grabilityprueba.MainNavigation;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.GetInternalImage;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.SaveImage;
 import com.grability.iliuminate.grabilityprueba.R;
 
-import java.security.Policy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +28,7 @@ import java.util.List;
 /**
  * Created by Iliuminate on 11/01/2016.
  */
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder> {
+public class MyRecyclerViewAdapterTablet extends RecyclerView.Adapter<MyRecyclerViewAdapterTablet.MyViewHolder> {
 
     List<EntryClass> data = Collections.emptyList();
     List<Integer> displayParameter;
@@ -43,24 +37,26 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private LayoutInflater inflater;
     final int tamanoImage=definirHeightImagen();
     Context context;
+    int numBloques=2;
 
-    // "tipoCarga" Identifica si se realizará desde de internet o de manera local
+
+    // "tipoCarga "Identifica si se realizará desde de internet o de manera local
     // 0-Internet, 1-Local
     int tipoCarga;
     //El separador se requiere para armar el nombre al momento de almacenar la imagen
     final String[] separador=new String[3];
-
     private final String TAG="MyRecyclerAdapter";
 
 
-    //Constructor del ReyclerView.Adapter
-    public MyRecyclerViewAdapter(Context context, List<EntryClass> data, int tipoCarga, List<Integer> displayParameter) {
+
+    public MyRecyclerViewAdapterTablet(Context context, List<EntryClass> data, int tipoCarga, List<Integer> displayParameter, int numBloques) {
 
         inflater = LayoutInflater.from(context);
         this.context=context;
         this.data = data;
         this.displayParameter=displayParameter;
         this.tipoCarga=tipoCarga;
+        this.numBloques=numBloques;
         separador[0]="LOW";
         separador[1]="MEDIUM";
         separador[2]="HIGH";
@@ -82,8 +78,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
             //Se puede agregar un evento OnClickListener
             //itemView.setOnClickListener(context.myOnClickListener);
-            imageView.setOnClickListener(MainNavigation.myOnClickImagenListener);
-            titulo.setOnClickListener(MainNavigation.myOnClickTextViewListener);
         }
     }
 
@@ -91,12 +85,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
-        //View itemView = inflater.inflate(R.layout.item, viewGroup, false);
-        View itemView = inflater.inflate(R.layout.item_card, viewGroup, false);
+        View itemView=null;
+        if(numBloques==1) {
+            itemView = inflater.inflate(R.layout.item_card, viewGroup, false);
+        }else {
+            itemView = inflater.inflate(R.layout.item_tablet, viewGroup, false);
+        }
         //Instanciamos la clase Holder(para esta caso myViewHolder) y la retornamos
         MyViewHolder holder = new MyViewHolder(itemView);
         return holder;
     }
+
 
 
     @Override
@@ -127,7 +126,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         // Actualizar los Views
         myViewHolder.titulo.setText(currentData.getTitle());
-        myViewHolder.precio.setText("$ " + currentData.getIm_price().getAmount() + " " + currentData.getIm_price().getCurrency());
+        myViewHolder.precio.setText("$ "+currentData.getIm_price().getAmount()+" "+currentData.getIm_price().getCurrency());
     }
 
 
@@ -175,7 +174,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                                     //Contexto
                                     context
                             );
-                            //Log.d(TAG,"PostGuardar: "+item.getId().getIm_id() + separador[tamanoImage] + heightImage);
+                            Log.d(TAG,"PostGuardar: "+item.getId().getIm_id() + separador[tamanoImage] + heightImage);
                         }
 
                     }
@@ -201,7 +200,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         parametrizarImageView(heightImage,imageView);
 
         /*//Menaje en el Lod como apoyo para verificar la carga Local*/
-        //Log.d(TAG, "CargarImagenLocal: " + item.getId().getIm_id() + separador[tamanoImage] + heightImage);
+        //Log.d(TAG,"CargarImagenLocal: "+item.getId().getIm_id()+separador[tamanoImage]+heightImage);
 
         //Se busca y se carga la Imagen en el ImageView
         getInternalImage=new GetInternalImage(item.getId().getIm_id()+separador[tamanoImage]+heightImage,imageView, context);
@@ -234,33 +233,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private void parametrizarImageView(int heightImage, ImageView imageView){
         int marginImage=(int)heightImage/6;
         int lado=(int)(heightImage*1.8);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(lado,lado);
-        layoutParams.setMargins(marginImage, marginImage, marginImage, marginImage);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(lado, lado);
+        layoutParams.setMargins(marginImage,marginImage,marginImage,marginImage);
         imageView.setLayoutParams(layoutParams);
     }
 
 
+    /**
+     * Informamos que ubo cambio en los datos
+     * @param datas
+     */
     public void reloadData(ArrayList<EntryClass> datas){
-        Log.d(TAG,"Reload Data0 Size: "+datas.size());
         data.clear();
         data.addAll(datas);
         notifyDataSetChanged();
-        Log.d(TAG, "Reload Data1 Size: " + data.size());
-        Log.d(TAG,"Reload Data2 Size: "+datas.size());
     }
 
-/*
-    public void add(MyViewHolder item, int position) {
-        items.add(position, item);
-        notifyItemInserted(position);
-    }
-
-    public void remove(MyViewHolder item) {
-        int position = items.indexOf(item);
-        items.remove(position);
-        notifyItemRemoved(position);
-    }
-*/
 
 
 }

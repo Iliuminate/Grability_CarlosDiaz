@@ -1,7 +1,6 @@
 package com.grability.iliuminate.grabilityprueba;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -30,11 +30,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.grability.iliuminate.grabilityprueba.ControlClasses.ParseJson;
-import com.grability.iliuminate.grabilityprueba.ControlClasses.Urls;
+import com.grability.iliuminate.grabilityprueba.AdaptersParsing.ParseJson;
+import com.grability.iliuminate.grabilityprueba.ParametersClasses.Urls;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.FeedClass;
-import com.grability.iliuminate.grabilityprueba.MyRecyclerView.MyRecyclerViewAdapter;
+import com.grability.iliuminate.grabilityprueba.AdaptersParsing.MyRecyclerViewAdapter;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.JsonOffline;
 
 import org.json.JSONException;
@@ -50,7 +50,6 @@ public class MainNavigation extends AppCompatActivity
 
 
     FeedClass feedClass;
-    Button btn1;
     private final String TAG="MyRecycler";
     List<String> listaCategorias;
     Context context=this;
@@ -64,7 +63,6 @@ public class MainNavigation extends AppCompatActivity
 
 
     //Se definen los eventos Click
-    public static View.OnClickListener myOnClickListener;
     public static View.OnClickListener myOnClickImagenListener;
     public static View.OnClickListener myOnClickTextViewListener;
 
@@ -78,13 +76,10 @@ public class MainNavigation extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-
-        btn1=(Button)findViewById(R.id.btn1);
         recyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
         listaCategorias=new ArrayList<String>();
 
         //Se inicializan los eventos OnClickListener para los View
-        myOnClickListener = new MyOnClickListener();
         myOnClickImagenListener=new MyOnClickImageListener();
         myOnClickTextViewListener=new MyOnClickTextViewListener();
 
@@ -98,12 +93,6 @@ public class MainNavigation extends AppCompatActivity
 
 
         loadItems();
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(context,MainNavigationTablet.class));
-            }
-        });
 
 
         //************************************************************************************************
@@ -112,7 +101,7 @@ public class MainNavigation extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, R.string.your_action_event, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -135,16 +124,7 @@ public class MainNavigation extends AppCompatActivity
 
     //************************************************************************************************
 
-    private class MyOnClickListener implements View.OnClickListener {
 
-        @Override
-        public void onClick(View v) {
-
-            toastMessage("Se preciocó un elemento");
-            /*String selectedArticleUrl = getSelectedArticleUrl(v);
-            showSelectedArticle(selectedArticleUrl);*/
-        }
-    }
 
     /**
      * Parametros de la pantalla
@@ -339,7 +319,7 @@ public class MainNavigation extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.grability_menu, menu);
+        getMenuInflater().inflate(R.menu.main_navigation, menu);
         return true;
     }
 
@@ -359,6 +339,7 @@ public class MainNavigation extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(context,MainNavigationTablet.class));
             return true;
         }
 
@@ -407,6 +388,13 @@ public class MainNavigation extends AppCompatActivity
             toastMessage("TEXTO");
         }
     }
+
+
+    //Estos servicios estan disponibles solo desde el API 21.. como se solicita trabajar con API desde el 14 no se pueden usar
+    /*private void setupWindowAnimations() {
+        getWindow().setReenterTransition(new Explode());
+        getWindow().setExitTransition(new Explode().setDuration(500));
+    }*/
 
 
 

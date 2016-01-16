@@ -1,6 +1,8 @@
 package com.grability.iliuminate.grabilityprueba;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,10 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +31,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.grability.iliuminate.grabilityprueba.ControlClasses.ParseJson;
+import com.grability.iliuminate.grabilityprueba.AdaptersParsing.ParseJson;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.EntryClass;
 import com.grability.iliuminate.grabilityprueba.ModelClasses.FeedClass;
 import com.grability.iliuminate.grabilityprueba.MyRecyclerView.MarginDecoration;
-import com.grability.iliuminate.grabilityprueba.MyRecyclerView.MyRecyclerViewAdapterTablet;
-import com.grability.iliuminate.grabilityprueba.MyRecyclerView.ViewHolderClass;
+import com.grability.iliuminate.grabilityprueba.AdaptersParsing.MyRecyclerViewAdapterTablet;
 import com.grability.iliuminate.grabilityprueba.OfflineManager.JsonOffline;
+import com.grability.iliuminate.grabilityprueba.ParametersClasses.KeysFeed;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,7 +55,7 @@ public class MainNavigationTablet extends AppCompatActivity
     ArrayList<EntryClass> entries;
 
     private final String TAG="MainNavigationTablet";
-    private final int BloquesIniciales=3;
+    private final int BloquesIniciales=1;
     Context contexto=MainNavigationTablet.this;
     SeekBar barraColumnas;
     TextView txtColumnas;
@@ -79,6 +77,8 @@ public class MainNavigationTablet extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setMyScreenOrientation();
+
 
         barraColumnas=(SeekBar)findViewById(R.id.seekBar);
         txtColumnas=(TextView)findViewById(R.id.txtColumn);
@@ -91,7 +91,6 @@ public class MainNavigationTablet extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.addItemDecoration(new MarginDecoration(this));
         recyclerView.setHasFixedSize(true);
-
         gridLayoutManager = new GridLayoutManager(contexto, numeroBloques);
         recyclerView.setLayoutManager(gridLayoutManager);
 
@@ -103,7 +102,7 @@ public class MainNavigationTablet extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, R.string.your_action_event, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -125,12 +124,9 @@ public class MainNavigationTablet extends AppCompatActivity
     }
 
 
-    //***************************************************************************************************************
-
 
     //***************************************************************************************************************
-
-
+    //***************************************************************************************************************
 
     private FeedClass loadItems()
     {
@@ -177,7 +173,11 @@ public class MainNavigationTablet extends AppCompatActivity
     }
 
 
-
+    /**
+     * Cargamos los Itema en pantalla (RecyclerView)
+     * @param feedClass
+     * @param response
+     */
     private void alimentarVistas(FeedClass feedClass, JSONObject response){
         entries=new ArrayList<EntryClass>();
         entries.addAll(feedClass.getEntryList());
@@ -256,6 +256,7 @@ public class MainNavigationTablet extends AppCompatActivity
 
 
     /**
+     * Util para definir la imagen que se va a usar en el adapter
      * List<Integer> [0-3]: Width, Height, Density, Orientation
      * @return
      */
@@ -269,8 +270,6 @@ public class MainNavigationTablet extends AppCompatActivity
         display.getSize(size);
         int width = size.x;
         int height = size.y;
-        /*Log.i(TAG, "Ancho             = " + width);
-        Log.i(TAG, "Alto              = " + height);*/
 
         // dpi
         DisplayMetrics metrics = new DisplayMetrics();
@@ -280,18 +279,9 @@ public class MainNavigationTablet extends AppCompatActivity
         int densityDpi = metrics.densityDpi;
         float xdpi = metrics.xdpi;
         float ydpi = metrics.ydpi;
-        /*Log.i(TAG, "Ancho en píxeles  = " + widthPixels);
-        Log.i(TAG, "Alto en píxeles   = " + heightPixels);
-        Log.i(TAG, "Densidad dpi      = " + densityDpi);
-        Log.i(TAG, "x dpi             = " + xdpi);
-        Log.i(TAG, "y dpi             = " + ydpi);*/
-
-       /* Log.i(TAG, "Rel. Ancho        = " + (widthPixels/xdpi));
-        Log.i(TAG, "Rel. Alto         = " + (heightPixels/ydpi));*/
 
         // Orientación (1 portrait, 2 Landscape)
         int orientation = getResources().getConfiguration().orientation;
-        /*Log.i(TAG, "Orientación       = " + orientation);*/
 
         displayParameters.add(widthPixels);//Width
         displayParameters.add(heightPixels);//Height
@@ -304,20 +294,14 @@ public class MainNavigationTablet extends AppCompatActivity
 
 
     SeekBar.OnSeekBarChangeListener onSeekBarChangeListener=new SeekBar.OnSeekBarChangeListener() {
-
-        int j=2;
+        int j=1;
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-            j=(progress+2);
+            j=(progress+1);
 
             recyclerViewAdapter=new MyRecyclerViewAdapterTablet(contexto, entries, 0, getDisplayParameters(), j);
             recyclerView.setAdapter(recyclerViewAdapter);
-
-            //Cargamos la lista de categorias
-            listaCategorias = getListCategory(feedClass.getEntryList());
-            agregarItemsNavigationViewMenu(listaCategorias, navigationView);
-            invalidateOptionsMenu();
 
             //Ajustamos el numero de columnas que queremos mostrar
             gridLayoutManager.setSpanCount(j);
@@ -329,13 +313,10 @@ public class MainNavigationTablet extends AppCompatActivity
         }
 
         @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
+        public void onStartTrackingTouch(SeekBar seekBar) {}
 
         @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
+        public void onStopTrackingTouch(SeekBar seekBar) {}
     };
 
 
@@ -353,7 +334,38 @@ public class MainNavigationTablet extends AppCompatActivity
     }
 
 
+    private boolean IsTablet()
+    {
+        Log.d(TAG, "ScreenType: " + getResources().getString(R.string.screen_type));
+        if(KeysFeed.SCREEN_TYPE.equals(getResources().getString(R.string.screen_type))){
+            return false;
+        }
+        else{ return true;}
+    }
 
+    private void setMyScreenOrientation()
+    {
+        if (IsTablet())
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        else
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+
+    /**
+     * Recuperamos el tamaño de la pantalla
+     * @return
+     */
+    private double screenInches() {
+        //DisplayMetrics dm = contexto.Resources.DisplayMetrics;
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        float screenWidth = dm.widthPixels/ dm.xdpi;
+        float screenHeight = dm.heightPixels / dm.ydpi;
+        double size = Math.sqrt(Math.pow(screenWidth, 2) + Math.pow(screenHeight, 2));
+        Log.d(TAG,"ScreeInches: "+size);
+        return size;
+    }
 
     //***************************************************************************************************************
 
@@ -384,6 +396,7 @@ public class MainNavigationTablet extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(contexto, MainNavigation.class));
             return true;
         }
 
@@ -409,7 +422,7 @@ public class MainNavigationTablet extends AppCompatActivity
         }
 
         if(label.equals(getResources().getString(R.string.all_aplication))){
-            recyclerViewAdapter.reloadData(entries);
+            recyclerViewAdapter.reloadData(feedClass.getEntryList());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

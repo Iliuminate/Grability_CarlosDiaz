@@ -8,12 +8,14 @@ import com.grability.iliuminate.grabilityprueba.EntryClasses.EntryClassImPrice;
 import com.grability.iliuminate.grabilityprueba.EntryClasses.EntryClassImReleaseDate;
 import com.grability.iliuminate.grabilityprueba.EntryClasses.EntryClassLink;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Iliuminate on 09/01/2016.
  */
-public class EntryClass {
+@SuppressWarnings("serial")
+public class EntryClass implements Serializable {
 
     String  im_name,
             summary,
